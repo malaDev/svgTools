@@ -1,0 +1,31 @@
+/* 
+    Document   : css
+    Created on : 19 août 2012, 15:02:43
+    Author     : mala
+    Description:
+        Purpose of the stylesheet follows.
+*/
+body{font-family:"Ubuntu";font-size: 12px;}
+#carte{float:left;width:800px}
+#command{float:right;width:400px;vertical-align:top}
+.list-path{display:inline-block;}
+.list-path li{list-style: none;display:inline-block;margin: 0 5px 5px 5px;}
+.nodisplay{display: none}
+
+svg path{cursor: pointer;}
+svg path:hover{_fill:#ccc}
+svg .delim, svg .lac, svg .land{
+    stroke-width: 1.5;
+    stroke-miterlimit: 4;    
+}
+svg .delim{
+    stroke: #fff;
+}
+svg .lac{
+    fill:#c6ecff;
+    stroke: #c6ecff;
+}
+svg .land{
+    fill:#888;
+    _stroke: #005A9C;
+}
