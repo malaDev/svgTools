@@ -98,12 +98,11 @@ include("./server/mysql.php");
    width="803.12671"
    height="1458.4299"
    viewBox="0 0 803.12671 1458.4299"
-   preserveAspectRatio="xMidYMid Slice"
    id="svg2"
    xml:space="preserve"
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="Madagascar_location_map.svg">';
-    $svg.='<g id="Madagascar" transform="scale(0.45)" style="fill:none">';
+    $svg.='<g id="Madagascar" transform="scale(0.5)" style="fill:none">';
     $svg.='<rect
    width="803.12671"
    height="1458.4299"
@@ -114,14 +113,16 @@ include("./server/mysql.php");
     
     //données de la base
     $tab=array(1,40,41,42,48);
-    $tab=array(0);
-    $sql="select * from path_brut";
+    $tab=array();
+    $sql="select * from path_brut order by `zindex`";
     //$sql.=" where num in ".$tab;
     $query=mysql_query($sql) or die(mysql_error());
     while($dsvg=mysql_fetch_array($query)){
+        $title="";
         if(in_array($dsvg['num'], $tab)) $display = "";
         else $display = "display:none";
-        $svg.='<path id="'.$dsvg['id'].'" d="'.$dsvg['geom'].'" style="'.$display.'" class="'.$dsvg['class'].'"/>';
+        if($dsvg["zindex"]==3) $title=$dsvg["name"];
+        $svg.='<path id="'.$dsvg['id'].'" title="'.$title.'" d="'.$dsvg['geom'].'" style="'.$display.'" class="'.$dsvg['class'].'"/>';
     }
     $svg.='</g></svg>';
     echo $svg;

@@ -84,6 +84,58 @@ function minDist(path,pt){
     return [min,index,path[index]];
 }
 
+//Création de classe d
+function d(text){
+    this.value=text;
+    this.seq=this.seq().seq;
+}
+
+d.prototype.seq=function(){
+    var d=this.value;
+    var z=false;
+    if (d.match(/z\ ?$/ig)) z=true;
+    var se={};
+    se["z"]=z;
+    se["seq"]=d.match(/[mclvh](\ ?(\d+)\.(\d+)?\ ?\,\ ?(\d+)\.(\d+)?)+/ig);
+    return se;    
+}
+
+d.prototype.attrib=function(value){
+    this.value=value;
+    return true
+}
+
+d.prototype.fusion=function(d2){
+    d2.attrib(d2.value.replace(/^M/i,"L"));
+    var ret = new d(this.value);
+    ret.value += d2.value;
+    return ret;
+}
+
+d.prototype.inverse=function(){
+    var ssq_,lo_,s0,i,ssqi_,pr_,pt_,param_,typPrec_,valiny,inv;
+    ssq_=this.seq;
+    lo_=ssq_.length;
+    s0=[];
+    for(i=0;i<lo_;i++){
+        s0[i]=ssq_[i].analyse();
+    }    
+    ssqi_=[];
+    ssqi_.push("M "+s0[lo_-1].point);
+    for(i=lo_-2;i>=0;i--){
+        typPrec_=s0[i+1].type;
+        pt_=s0[i].point;
+        pr_=s0[i+1].param;
+        param_="";
+        if(typPrec_=="C") param_=" "+pr_[1]+" "+pr_[0];
+        ssqi_.push(typPrec_+param_+" "+pt_);
+    }
+    valiny={};
+    valiny["seq"]=ssqi_;
+    valiny["d"]=new d(ssqi_.join(" "));
+    return valiny;
+}
+
 //Définition class path
 function path(jqPath){
     this.isPath = true;
@@ -97,6 +149,10 @@ function path(jqPath){
     this.bouts  = this.extrem();
     this.length = this.getPoint().length;
     return this;
+}
+
+path.prototype.md=function(value){
+    this.elm.attr("d",value);
 }
 
 path.prototype.extrem=function(){
@@ -134,6 +190,33 @@ path.prototype.pointd=function(){
 //retourne un json avec :
 // -la distance calculée
 path.prototype.minDist=function(point){
+    var po,pat,lo,min,index,test,info,i,t4;
+    po=point;
+    pat=this.points;
+    lo=pat.length;
+    min=distance(pat[0],po);
+    index=0;
+    for (i=1;i<lo;i++){
+        test = test.replace(/(^\ |\ $)/ig,'');
+    }
+    t4=t4.split(/\ /);
+    return t4;        
+}
+
+path.prototype.pointd=function(){
+    var t4;
+    t4=this.d;
+    t4=t4.replace(/c\ ?(\d+)\.(\d+)?\ ?\,\ ?(\d+)\.(\d+)?\ (\d+)\.(\d+)?\ ?\,\ ?(\d+)\.(\d+)?/gi,"");
+    t4=t4.replace(/(m|l|z)\ ?/gi,'');
+    t4=t4.replace(/\ \ /gi,' ');
+    t4=t4.replace(/(^\ |\ $)/ig,'');
+    return t4;
+}
+
+//Calcule la distance minimale entre un path et un point
+//retourne un json avec :
+// -la distance calculée
+path.prototype.minDist=function(point){
     var po,pat,lo,min,index,test,info,i;
     po=point;
     pat=this.points;
@@ -153,7 +236,8 @@ path.prototype.minDist=function(point){
 
 path.prototype.seq = function(){
     var d,z,se;
-    d=this.d;
+    //d=this.d;
+    d=this.attr("d");
     z=false;
     if (d.match(/z\ ?$/ig)) z=true;
     se={};
@@ -233,13 +317,7 @@ path.prototype.limit=function(lim,option){
         seqd=seql.join(" ");
     }
     this.attr("d",seqd);
-    //resultat={};
-    //resultat["dep"]=dep;
-    //resultat["fin"]=fin;
-    //resultat["seql"]=seql;
-    //resultat["seqd"]=seqd;
-    //resultat["init"]=seql[0];    
-    //return resultat;
+    return seqd;
 }
 
 //Recherche de points d'intersection entre 2 paths
@@ -280,19 +358,18 @@ path.prototype.intersection=function(path2,eps){
 
 path.prototype.decoupe=function(tab){
     if(!tab) return this.d;
-    var res=[],coupe=[],sequ=this.seq().seq,temp,nan=false;
+    var ret={},res=[],coupe=[],sequ=this.seq().seq,temp,nan=false;
     if (tab.length!=1){
         for (var i=0;i<=tab.length;i++){
             temp=sequ;
-            var deb,lon;
-            if (!tab[i-1]) {deb=0;lon=tab[0];}
+            var deb,fin;
+            if (!tab[i-1]) {deb=0;fin=tab[0]+1;}
             else if(!tab[i]){
-                deb=tab.last()-1;
-                lon=temp.length-tab.last();
+                deb=tab.last();
                 coupe=temp.slice(deb);
                 nan=true;
-            }else{deb=tab[i-1]-1;lon=tab[i]-tab[i-1];}
-            if(!nan)coupe=temp.slice(deb,lon);
+            }else{deb=tab[i-1];fin=tab[i]+1;}
+            if(!nan){coupe=temp.slice(deb,fin);}
             coupe[0]=coupe[0].m();
             res.push(coupe.join(" "));
         }
@@ -302,6 +379,22 @@ path.prototype.decoupe=function(tab){
         temp[tab[0]-1]=temp[tab[0]-1].m();
         coupe=temp.slice(tab[0]-1);
         res.push(coupe.join(" "));
+    }
+    ret["cut"]=res;
+    return ret;
+}
+
+//fusion deux paths consécutifs
+path.prototype.fusion=function(path2,colle){
+    var res={};
+    var path1=this;
+    var seq1=path1.seq().seq;
+    var seq2=path2.seq().seq;
+    seq2[0]=seq2[0].replace(/^M/i,"L");
+    seq1.push(seq2);
+    res["d"]=seq1.join(" ");
+    if (colle){
+        this.attr("d",res["d"]);
     }
     return res;
 }

@@ -1,12 +1,51 @@
 /* 
     Document   : css
     Created on : 19 août 2012, 15:02:43
-    Author     : mala
+    Author     : malaDev
     Description:
-        Purpose of the stylesheet follows.
+    Purpose of the stylesheet follows.
 */
-body{font-family:"Ubuntu";font-size: 12px;}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url(toadOcfmlt9b38dHJxOBGNbE_oMaV8t2eFeISPpzbdE.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Metrophobic';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Metrophobic'), url(0IZPA9DbzKXnGZABsAivT4bN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(MTP_ySUJH_bn48VBG8sNSnhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+
+
+
+body{font-family:"Source Sans Pro";font-size: 14px;}
+h1,h2,h3{font-family:"Open Sans";font-weight: 300}
+h1{font-size:29px; color:#3689AC}
+h2{font-size:25px; color:#3689AC}
+h3{font-size:18px;}
 #carte{float:left;width:800px}
+#carte2{float: left;width: 400px}
 #command{float:right;width:400px;vertical-align:top}
 .list-path{display:inline-block;}
 .list-path li{list-style: none;display:inline-block;margin: 0 5px 5px 5px;}
@@ -19,13 +58,41 @@ svg .delim, svg .lac, svg .land{
     stroke-miterlimit: 4;    
 }
 svg .delim{
-    stroke: #fff;
+    stroke: #bbb;
 }
+
 svg .lac{
     fill:#c6ecff;
     stroke: #c6ecff;
 }
+
 svg .land{
     fill:#888;
-    _stroke: #005A9C;
 }
+
+svg .del-region{
+    _fill:#888;
+}
+
+svg .del-region:hover{
+    _fill:#3689AC;
+    _fill:#ccc;
+}
+
+svg .group-region,svg .group-region .land{
+    fill:#999;
+}
+
+svg .group-region:hover,
+svg .group-region:hover path{
+    fill:#aaa;
+}
+
+svg .group-region.selected,
+svg .group-region.selected path{
+    fill:#6688BB;
+}
+
+#infos li{list-style:none}
+#infos td:first-child{font-weight: bold}
+#infos td:last-child{padding-left: 20px;}
