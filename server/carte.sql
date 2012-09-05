@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS `path_brut` (
   PRIMARY KEY (`num`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
-<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS `population` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `data` varchar(200) DEFAULT NULL,
