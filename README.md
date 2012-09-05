@@ -13,5 +13,7 @@ outils js de manipulation de svg/path (plus spécialement les paths)
   - principalement ces outils consernent surtout au découpage et réunion de paths
 
 D'autre part le fichier group.php donne un aperçu après traitement manuel des données insérées dans MySQL
+Mais avant il faudrait insérer les données dans /server/carte.sql
+les configutaions de connexion sont dans /server/mysql.php
 
 Zay mahita hevitra hafa.... Tongasoa am tanàna!!!
